@@ -9,6 +9,9 @@ a {
 html {
     scroll-behavior: smooth;
 }
+.h-100 {
+    height: 100%;
+}
 
 
 .red {
@@ -24,6 +27,24 @@ html {
 /* scrollReveal */
 .scroll-animation {
     position: relative;
+}
+
+/* Vertical scroll'a verilen propertiler */
+
+/* scrollun qalinligi */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* arxa hisse */
+::-webkit-scrollbar-track {
+    background: #fff;
+}
+
+/* on hisse */
+::-webkit-scrollbar-thumb {
+    background: #f00;
+    border-radius: 100vh;
 }
 
 /* Run animations after page loaded */
@@ -181,6 +202,7 @@ html {
     z-index: 5;
     background-color: #fff;
     border-bottom: 1px solid #bbb;
+    height: 65px;
 }
 .nav-content {
     display: flex;
@@ -719,33 +741,34 @@ html {
     flex-direction: column;
     margin-bottom: 30px;
 }
-.portfolio > div > div > div > p {
+.portfolio-types > p {
     display: none;
 }
-.portfolio > div > div > div > ul {
+.portfolio-types > ul {
     list-style: none;
     display: flex;
     margin-top: 40px;
 }
-.portfolio > div > div > div > ul > li {
+.portfolio-types > ul > li {
     overflow: hidden;
     height: 21px;
     display: flex;
     flex-direction: column;
     font: 600 15px 'Montserrat', sans-serif;
-    margin-right: 30px;
+    margin-right: 25px;
     color: #000;
     cursor: pointer;
 }
 .prevItems,
 .nextItems
 {
+    height: 100%;
     transition: all .3s ease-in-out;
 }
-.portfolio > div > div > div > ul > li:hover > .prevItems,
-.portfolio > div > div > div > ul > li:hover > .nextItems
+.portfolio-types > ul > li:hover > .prevItems,
+.portfolio-types > ul > li:hover > .nextItems
 {
-    transform: translateY(-21px);
+    transform: translateY(-19px);
 }
 .portfolio-gallery {
     display: flex;
@@ -767,7 +790,7 @@ html {
 }
 .portfolio-col > div {
     width: 100%;
-    height: 500px;
+    height: 300px;
     overflow: hidden;
 }
 .portfolio-col img {
@@ -792,6 +815,176 @@ html {
     font: italic 400 15px 'Mulish', sans-serif;
     color: #323232;
     margin-bottom: 45px;
+}
+.portfolio-hidden {
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: all .4s ease;
+}
+.portfolio-hidden.active {
+    opacity: 1;
+    visibility: visible;
+}
+.portfolio-hidden > div:first-child {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgb(51, 51, 52, .9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.portfolio-hidden > div:first-child.active {
+    width: 80%;
+}
+.portfolio-hidden > div:first-child > div.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 40vh;
+    max-width: 100%;
+    width: 300px;
+    padding: 0;
+    overflow: hidden;
+}
+.portfolio-sliders {
+    height: 100%;
+    display: flex;
+    position: relative;
+    left: 0;
+}
+.portfolio-sliders > div {
+    width: 100%;
+    flex: 0 0 auto;
+}
+.portfolio-sliders > div > img,
+.portfolio-sliders > div > iframe
+{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.portfolio-menu > div > div.mediaFile {
+    position: relative;
+}
+.portfolio-menu > div > div.mediaFile > div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(30,30,30,.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+.arrows {
+    position: absolute;
+    width: 100%;
+    height: 40px;
+}
+.arrows > div {
+    position: absolute;
+    text-align: center;
+    line-height: 40px;
+    width: 40px;
+    height: 100%;
+    background: rgba(30,30,30,.6);
+    color: #ccc;
+    cursor: pointer;
+}
+.left-arrow {
+    left: 0;
+    margin-left: 5px;
+}
+.right-arrow {
+    right: 0;
+    margin-right: 5px;
+}
+.portfolio-hidden > div:first-child > .buttons {
+    display: flex;
+    background: #393939;
+    color: #ccc;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+}
+.portfolio-hidden > div:first-child > .buttons > i {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+}
+.portfolio-hidden > div:first-child > .buttons > i:hover,
+.arrows > div:hover
+{
+    color: #fff;
+}
+.portfolio-hidden > div:first-child > .buttons > i:last-child {
+    font-size: 20px;
+}
+.portfolio-menu {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 20%;
+    height: 100%;
+    background: #ddd;
+    display: none;
+    overflow-y: auto;
+}
+.portfolio-menu.active {
+    display: block;
+}
+.portfolio-menu > div {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1px;
+    background: #ddd;
+}
+.portfolio-menu > div > div {
+    width: 100%;
+    height: 80px;
+    flex: 0 0 auto;
+    border: 1px solid #ddd;
+    transition: all .4s ease;
+    position: relative;
+}
+.portfolio-menu > div > div:before {
+    content: '';
+    position: absolute;
+    z-index: 4;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 3px solid red;
+    opacity: var(--imageBeforeOpacity,0);
+    visibility: var(--imageBeforeVisibility,hidden);
+    transition: all .4s ease;
+}
+.portfolio-menu > div > div:hover {
+    cursor: pointer;
+}
+.portfolio-menu > div > div:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+.portfolio-menu > div > div > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Portfolio ends */
@@ -891,7 +1084,7 @@ html {
     width: 80px;
     height: 100%;
     object-fit: cover;
-    margin-right: 30px;
+    margin-right: 10px;
     border-radius: 5px;
     cursor: pointer;
 } 
@@ -1224,6 +1417,19 @@ html {
     }
 
     /* About ends */
+
+    /* Portfolio starts */
+
+    .portfolio-hidden > div:first-child > div.container {
+        height: 50vh;
+        max-width: 100%;
+        width: 460px;
+    }
+    .portfolio-col {
+        width: 45%;
+    }
+
+    /* Portfolio ends */
 }
 
 @media (min-width: 768px) {
@@ -1304,6 +1510,21 @@ html {
     }
 
     /* About ends */
+
+    /* Portfolio starts */
+
+    .portfolio-hidden > div:first-child.active {
+        width: 88%;
+    }
+    .portfolio-menu {
+        width: 12%;
+    }
+    .portfolio-hidden > div:first-child > div.container {
+        max-width: 100%;
+        width: 490px;
+    }
+
+    /* Portfolio ends */
 
     /* Testimonial starts */
 
@@ -1572,7 +1793,7 @@ html {
         justify-content: space-between;
         margin-bottom: 105px;
     }
-    .portfolio > div > div > div > p {
+    .portfolio-types > p {
         display: inline-flex;
         flex-direction: column;
         justify-content: center;
@@ -1609,11 +1830,11 @@ html {
     .downLine.active {
         left: 0;
     }
-    .portfolio > div > div > div {
+    .portfolio-types {
         display: flex;
         align-items: center;
     }
-    .portfolio > div > div > div > ul {
+    .portfolio-types > ul {
         position: relative;
         left: 0;
         list-style: none;
@@ -1623,16 +1844,24 @@ html {
         transition: all .3s ease-in-out;
         margin-top: 0;
     }
-    .portfolio > div > div > div > ul.active {
+    .portfolio-types > ul.active {
         left: -20px;
         opacity: 1;
         visibility: visible;
     }
-    .portfolio-col {
-        width: 45%;
+    .portfolio-hidden > div:first-child > div.container {
+        height: 75vh;
+        max-width: 100%;
+        width: 730px;
     }
-    .portfolio-col > div {
-        height: 350px;
+    .portfolio-hidden > div:first-child.active {
+        width: 85%;
+    }
+    .portfolio-menu {
+        width: 15%;
+    }
+    .portfolio-menu > div > div {
+        width: 50%;
     }
 
     /* Portfolio ends */
@@ -1744,6 +1973,16 @@ html {
     .portfolio-col {
         width: 30%;
     }
+    .portfolio-hidden > div:first-child.active {
+        width: 88%;
+    }
+    .portfolio-menu {
+        width: 12%;
+    }
+    .portfolio-hidden > div:first-child > div.container {
+        max-width: 100%;
+        width: 910px;
+    }
 
     /* Portfolio ends */
 
@@ -1786,6 +2025,15 @@ html {
     }
 
     /* About ends */
+
+    /* Portfolio starts */
+
+    .portfolio-hidden > div:first-child > div.container {
+        max-width: 100%;
+        width: 1100px;
+    }
+
+    /* Portfolio ends */
 
 }
 

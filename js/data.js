@@ -5,7 +5,8 @@ const filterData = [
             {
                 img: "./img/portfolio/portfolio-img1.jpg",
                 title: 'My Song',
-                type: 'Vimeo'
+                type: 'Vimeo',
+                media: "https://www.youtube.com/embed/HwVh8pmOot4"
             },
             {
                 img: "./img/portfolio/portfolio-img2.jpg",
@@ -20,12 +21,14 @@ const filterData = [
             {
                 img: "./img/portfolio/portfolio-img4.jpg",
                 title: 'My Hits',
-                type: 'Youtube'
+                type: 'Youtube',
+                media: "https://www.youtube.com/embed/-11cK6-IOUc"
             },
             {
                 img: "./img/portfolio/portfolio-img5.jpg",
                 title: 'University Life',
-                type: 'Youtube'
+                type: 'Youtube',
+                media: "https://www.youtube.com/embed/OxyE6L6esL0"
             },
             {
                 img: "./img/portfolio/portfolio-img6.jpg",
@@ -40,7 +43,8 @@ const filterData = [
             {
                 img: "./img/portfolio/portfolio-img4.jpg",
                 title: 'My Sound',
-                type: 'Vimeo'
+                type: 'Vimeo',
+                media: "https://www.youtube.com/embed/-11cK6-IOUc"
             }
         ]
     },
@@ -55,7 +59,8 @@ const filterData = [
             {
                 img: "./img/portfolio/portfolio-img4.jpg",
                 title: 'My Hits',
-                type: 'Youtube'
+                type: 'Youtube',
+                media: "https://www.youtube.com/embed/-11cK6-IOUc"
             }
         ]
     },
@@ -65,7 +70,8 @@ const filterData = [
             {
                 img: "./img/portfolio/portfolio-img1.jpg",
                 title: 'Beautiful Memory',
-                type: 'Gallery'
+                type: 'Gallery',
+                media: "https://www.youtube.com/embed/HwVh8pmOot4"
             },
             {
                 img: "./img/portfolio/portfolio-img2.jpg",

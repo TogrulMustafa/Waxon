@@ -5,8 +5,8 @@ const nav = document.querySelector('.nav')
 const menuList = document.querySelectorAll('.menu-list li a')
 const hiddenAbout = document.querySelector('.about-hide')
 const learnMoreBtn = document.querySelector('.about-text > button')
-const portfolioBtn = document.querySelector('.portfolio > div > div > div > p')
-const portfolioMenu = document.querySelector('.portfolio > div > div > div > ul')
+const portfolioBtn = document.querySelector('.portfolio-types > p')
+const portfolioMenu = document.querySelector('.portfolio-types > ul')
 const upLine = document.querySelector('.upLine')
 const downLine = document.querySelector('.downLine')
 const testimonialImgs = document.querySelectorAll('.testimonial-image img')
@@ -22,7 +22,7 @@ const scrollToTop = document.querySelector('.scrollToTop')
 
 
 // Portfolio bolmesinde mehsullarin filtrlenmesi
-Array.from(document.querySelectorAll('.nextItems')).forEach(item => {
+Array.from(document.querySelectorAll('.portfolio-types > ul > li > *')).forEach(item => {
     item.addEventListener('click', _ => {
         filterData.forEach(thing => {
             if (thing.name === item.textContent) {
@@ -38,6 +38,27 @@ Array.from(document.querySelectorAll('.nextItems')).forEach(item => {
                     </div>
                     `
                 }).join(' ')
+                document.querySelector('.portfolio-menu > div').innerHTML = ''
+                document.querySelector('.portfolio-menu > div').innerHTML += thing.data.map(item => {
+                    return `
+                    ${item.media ? `<div class='mediaFile'>
+                    <div><i class="fa-solid fa-play"></i></div>
+                    <img src=${item.img}>
+                    </div>`:
+                    `
+                    <div>
+                    <img src=${item.img}>
+                    </div>
+                    `}
+                    `
+                }).join(' ')
+                document.querySelector('.portfolio-sliders').innerHTML = ''
+                document.querySelector('.portfolio-sliders').innerHTML += thing.data.map(item => {
+                    return `
+                    ${item.media ? `<div><iframe width="560" height="315" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen src=${item.media}></iframe></div>` : `<div><img src=${item.img}></div>`}
+                    `
+                }).join(' ')
+                
                 if (thing.name == 'Youtube') {
                     document.querySelector('.portfolio-col').classList.add('active')
                     document.querySelector('.portfolio-gallery').classList.add('active')
@@ -46,6 +67,8 @@ Array.from(document.querySelectorAll('.nextItems')).forEach(item => {
                     document.querySelector('.portfolio-col').classList.remove('active')
                     document.querySelector('.portfolio-gallery').classList.remove('active')
                 }
+
+                showPortfolio()
             }
         })
     })
@@ -401,11 +424,292 @@ ScrollReveal().reveal('.contact-form', {delay: 700, origin: 'bottom'});
 ScrollReveal().reveal('.contact-iframe', {delay: 900, origin: 'bottom'});
 ScrollReveal().reveal('.footer-content', {delay: 600, origin: 'bottom',distance: '50px'});
 
+// Oxlarin adlandirilmasi
+const leftArrow = document.querySelector('.left-arrow')
+const rightArrow = document.querySelector('.right-arrow')
 
+// Portfolio bolmesinde portfolio-hidden sektorunun acilmasi
+function showPortfolio() {
+    Array.from(document.querySelectorAll('.portfolio-col > div')).forEach((item, i) => {
+        item.addEventListener('click', _ => {
+            console.log(i)
+            if (i == 0) {
+                leftArrow.style.display = 'none'
+                rightArrow.style.display = 'block'
+                if (document.querySelectorAll('.portfolio-col > div').length == 1) {
+                    leftArrow.style.display = 'none'
+                    rightArrow.style.display = 'none'
+                }
+            } 
+            else if (i == document.querySelectorAll('.portfolio-col > div').length - 1) {
+                leftArrow.style.display = 'block'
+                rightArrow.style.display = 'none'
+            }
+            else {
+                leftArrow.style.display = 'block'
+                rightArrow.style.display = 'block'
+            }
+            document.querySelector('.portfolio-hidden').classList.add('active')
+            document.querySelector('.portfolio-sliders').style.left = `-${(document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth * document.querySelectorAll('.portfolio-sliders > div').length) - (document.querySelectorAll('.portfolio-sliders > div').length - i) * document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth}px`
+            document.querySelector('.portfolio-sliders').style.transition = 'none'
 
+            // Window'u resize ederken portfolio-slidersdaki slaydlarin surusmesinin onlenmesi
+            preventSlideSlipping(i)
+            
+            // 
+            Array.from(document.querySelectorAll('.portfolio-menu > div > div')).forEach((item, i) => {
+                item.addEventListener('click', _ => {
+                    // window.location.reload()
+                    document.querySelector('.portfolio-sliders').style.left = `-${(document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth * document.querySelectorAll('.portfolio-sliders > div').length) - (document.querySelectorAll('.portfolio-sliders > div').length - i) * document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth}px`
+                    document.querySelector('.portfolio-sliders').style.transition = 'none'
+                    displayArrow(i)
+                    slipSlide(i)
+                    preventSlideSlipping(i)
+                    if ( document.querySelector('.buttons > i.fa-solid').classList.contains('fa-ban')) {
+                        document.querySelector('.buttons > i.fa-solid').classList.add('fa-play')
+                        document.querySelector('.buttons > i.fa-solid').classList.remove('fa-ban')
+                    }
+                    autoplaySlide(i)
+                    Array.from(document.querySelectorAll('.portfolio-menu > div > div')).forEach(item => {
+                        item.style.setProperty('--imageBeforeOpacity', '0');
+                        item.style.setProperty('--imageBeforeVisibility','hidden');
+                    })
 
+                    item.style.setProperty('--imageBeforeOpacity', '1');
+                    item.style.setProperty('--imageBeforeVisibility','visible');
+                })
+            })
 
+            // document.querySelector('.buttons > i:first-child').addEventListener('click', _ => {
+            //     console.log('Test')
 
+            //     let cock = setInterval(_ => {
+            //         document.querySelector('.portfolio-sliders').style.left = `-${(document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth * document.querySelectorAll('.portfolio-sliders > div').length) - (document.querySelectorAll('.portfolio-sliders > div').length - i) * document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth}px`
+            //         document.querySelector('.portfolio-sliders').style.transition = 'all 1s ease'
+            //         displayArrow(i)
+                    
+            //         if (i < document.querySelectorAll('.portfolio-sliders > div').length - 1) {
+            //             i++
+            //             console.log(i)
+            //         }
+            //         else {
+            //             clearInterval(cock)
+            //         }
+            //         preventSlideSlipping(i)
+
+            //     },3000)
+            // })
+
+            let box = document.querySelectorAll('.portfolio-menu > div > div')[i];
+            box.style.setProperty('--imageBeforeOpacity', '1');
+            box.style.setProperty('--imageBeforeVisibility','visible');
+
+            // portfolio-slidersdaki slaydlarin saga/sola dogru hereket etdirilmesi
+            slipSlide(i)
+
+            // Nav bolmesindeki slider'in ise salinmasi
+            autoplaySlide(i)
+
+            //? Nav bolmesindeki slider'in ise salinmasi
+            // document.querySelector('.fa-play').addEventListener('click', _ => {
+            //     let cock = setInterval(_ => {
+            //         displayArrow(i)
+            //         preventSlideSlipping(i)
+            //         document.querySelector('.portfolio-sliders').style.left = `-${(document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth * document.querySelectorAll('.portfolio-sliders > div').length) - (document.querySelectorAll('.portfolio-sliders > div').length - i) * document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth}px`
+            //         document.querySelector('.portfolio-sliders').style.transition = 'left .2s ease'
+            //         Array.from(document.querySelectorAll('.portfolio-menu > div > div')).forEach(item => {
+            //             item.style.setProperty('--imageBeforeOpacity', '0');
+            //             item.style.setProperty('--imageBeforeVisibility','hidden');
+            //         })
+            //         document.querySelectorAll('.portfolio-menu > div > div')[i].style.setProperty('--imageBeforeOpacity', '1');
+            //         document.querySelectorAll('.portfolio-menu > div > div')[i].style.setProperty('--imageBeforeVisibility','visible');
+            //         i += 1
+            //         if (i == document.querySelectorAll('.portfolio-sliders > div').length) {
+            //             clearInterval(cock)
+            //         }
+            //     },2000)
+            // })
+        })
+    })
+}
+
+showPortfolio()
+
+// portfolio-slidersdaki slaydlarin saga/sola dogru avtomatik hereket etdirilmesi
+function autoplaySlide(i) {
+    document.querySelector('.buttons > i.fa-solid').addEventListener('click', e => {
+        if (e.target.classList.contains('fa-play')) {
+
+            document.querySelector('.buttons > i.fa-solid').classList.add('fa-stop')
+            document.querySelector('.buttons > i.fa-solid').classList.remove('fa-play')
+
+            var cock = setInterval(_ => {
+
+                displayArrow(i)
+
+                preventSlideSlipping(i)
+
+                document.querySelector('.portfolio-sliders').style.left = `-${(document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth * document.querySelectorAll('.portfolio-sliders > div').length) - (document.querySelectorAll('.portfolio-sliders > div').length - i) * document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth}px`
+                document.querySelector('.portfolio-sliders').style.transition = 'left .2s ease'
+
+                Array.from(document.querySelectorAll('.portfolio-menu > div > div')).forEach(item => {
+                    item.style.setProperty('--imageBeforeOpacity', '0');
+                    item.style.setProperty('--imageBeforeVisibility','hidden');
+                })
+                document.querySelectorAll('.portfolio-menu > div > div')[i].style.setProperty('--imageBeforeOpacity', '1');
+                document.querySelectorAll('.portfolio-menu > div > div')[i].style.setProperty('--imageBeforeVisibility','visible');
+
+                i += 1
+
+                document.querySelector('.buttons > i.fa-stop').addEventListener('click', _ => {
+                    clearInterval(cock)
+                })
+
+                if (i == document.querySelectorAll('.portfolio-sliders > div').length) {
+
+                    clearInterval(cock)
+
+                    document.querySelector('.buttons > i.fa-solid').classList.remove('fa-stop')
+                    document.querySelector('.buttons > i.fa-solid').classList.add('fa-ban')
+                }
+                
+            },2000)
+        } 
+        else if (e.target.classList.contains('fa-stop')) {
+            document.querySelector('.buttons > i.fa-solid').classList.remove('fa-stop')
+            document.querySelector('.buttons > i.fa-solid').classList.add('fa-play')
+        }
+        
+    })
+}
+
+// portfolio-slidersdaki slaydlarin oxlari klikleyerek saga/sola dogru hereket etdirilmesi
+function slipSlide(i) {
+    document.querySelectorAll('.arrows > div').forEach(item => {
+        item.addEventListener('click', _ => {
+            // const pauseVid = document.querySelector('.portfolio-sliders > div > iframe')
+            // pauseVid.pause()
+            if (item.className == 'left-arrow') {
+                let x = `-${(document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth * document.querySelectorAll('.portfolio-sliders > div').length) - (document.querySelectorAll('.portfolio-sliders > div').length - i) * document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth}`
+                document.querySelector('.portfolio-sliders').style.left = `${Number(x) + document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth}px`
+                document.querySelector('.portfolio-sliders').style.transition = 'left .2s ease'
+                i -= 1
+            } 
+            else {
+                let x = `-${(document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth * document.querySelectorAll('.portfolio-sliders > div').length) - (document.querySelectorAll('.portfolio-sliders > div').length - i) * document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth}`
+                document.querySelector('.portfolio-sliders').style.left = `${Number(x) - document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth}px`
+                document.querySelector('.portfolio-sliders').style.transition = 'left .2s ease'
+                i += 1
+            }
+
+            preventSlideSlipping(i)
+
+            Array.from(document.querySelectorAll('.portfolio-menu > div > div')).forEach(item => {
+                item.style.setProperty('--imageBeforeOpacity', '0');
+                item.style.setProperty('--imageBeforeVisibility','hidden');
+            })
+
+            let box = document.querySelectorAll('.portfolio-menu > div > div')[i];
+            box.style.setProperty('--imageBeforeOpacity', '1');
+            box.style.setProperty('--imageBeforeVisibility','visible');
+            
+
+            displayArrow(i)
+
+            //? Nav bolmesindeki slider'in ise salinmasi
+            // document.querySelector('.fa-play').addEventListener('click', _ => {
+            //     let cock = setInterval(_ => {
+            //         displayArrow(i)
+            //         preventSlideSlipping(i)
+            //         document.querySelector('.portfolio-sliders').style.left = `-${(document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth * document.querySelectorAll('.portfolio-sliders > div').length) - (document.querySelectorAll('.portfolio-sliders > div').length - i) * document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth}px`
+            //         document.querySelector('.portfolio-sliders').style.transition = 'left .2s ease'
+            //         Array.from(document.querySelectorAll('.portfolio-menu > div > div')).forEach((item, i) => {
+            //             item.style.setProperty('--imageBeforeOpacity', '0');
+            //             item.style.setProperty('--imageBeforeVisibility','hidden');
+            //         })
+            //         document.querySelectorAll('.portfolio-menu > div > div')[i].style.setProperty('--imageBeforeOpacity', '1');
+            //         document.querySelectorAll('.portfolio-menu > div > div')[i].style.setProperty('--imageBeforeVisibility','visible');
+            //         i += 1
+            //         if (i == document.querySelectorAll('.portfolio-sliders > div').length) {
+            //             clearInterval(cock)
+            //         }
+            //     },2000)
+            // })
+        })
+    })
+}
+
+// Portfolio bolmesinde portfolio-hidden sektorunun baglanmasi
+document.querySelector('.buttons > i:last-child').addEventListener('click', _ => {
+    document.querySelector('.portfolio-hidden').classList.remove('active')
+    // portfolio-menuda verilmis border'in yigisdirilmasi
+    Array.from(document.querySelectorAll('.portfolio-menu > div > div')).forEach(item => {
+        item.style.setProperty('--imageBeforeOpacity', '0');
+        item.style.setProperty('--imageBeforeVisibility','hidden');
+    })
+    // Slayder'in silinmesi
+
+})
+
+// Portfolio bolmesinde portfolio-hidden sektorunda play/stop ikonlarinin yerdeyismesi
+// let play = false
+// document.querySelector('.buttons > i.fa-play').addEventListener('click', _ => {
+//     if (play) {
+//         document.querySelector('.buttons > i.fa-solid').classList.add('fa-play')
+//         document.querySelector('.buttons > i.fa-solid').classList.remove('fa-stop')
+//         play = !play
+//     } 
+//     else {
+//         document.querySelector('.buttons > i.fa-solid').classList.add('fa-stop')
+//         document.querySelector('.buttons > i.fa-solid').classList.remove('fa-play')
+//         play = !play
+//     }
+// })
+
+// Ekrani kicildib/boyudende slayderlerin bundan tesirlenmesinin onlenmesi
+function preventSlideSlipping(i) {
+    window.addEventListener('resize', _ => {
+        document.querySelector('.portfolio-sliders').style.left = `-${(document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth * document.querySelectorAll('.portfolio-sliders > div').length) - (document.querySelectorAll('.portfolio-sliders > div').length - i) * document.querySelector('.portfolio-hidden > div:first-child > div.container').offsetWidth}px`
+        document.querySelector('.portfolio-sliders').style.transition = 'none'
+    })
+}
+
+// portfolio-slidersdaki oxlarin gorunurluyunun teyin edilmesi
+function displayArrow(i) {
+    if (i == 0) {
+        document.querySelector('.left-arrow').style.display = 'none'
+        document.querySelector('.right-arrow').style.display = 'block'
+    }
+    else if (i == document.querySelectorAll('.portfolio-sliders > div').length - 1) {
+        document.querySelector('.left-arrow').style.display = 'block'
+        document.querySelector('.right-arrow').style.display = 'none'
+    }
+    else {
+        document.querySelector('.left-arrow').style.display = 'block'
+        document.querySelector('.right-arrow').style.display = 'block'
+    }
+}
+
+// Portfolio bolmesinde portfolio-hidden sektorunda gozun acilib/baglanmasi
+let eye = false
+document.querySelector('.buttons > i.fa-regular').addEventListener('click', _ => {
+    if (eye) {
+        document.querySelector('.buttons > i.fa-regular').classList.add('fa-eye-slash')
+        document.querySelector('.buttons > i.fa-regular').classList.remove('fa-eye')
+        eye = !eye
+    } 
+    else {
+        document.querySelector('.buttons > i.fa-regular').classList.add('fa-eye')
+        document.querySelector('.buttons > i.fa-regular').classList.remove('fa-eye-slash')
+        eye = !eye
+    }
+})
+
+// Portfolio bolmesinde portfolio-hidden sektorunda bagli gozu klikleyende yandan basqa bir sektorun acilmasi/baglanmasi
+document.querySelector('.fa-eye-slash').addEventListener('click', _ => {
+    document.querySelector('.portfolio-menu').classList.toggle('active')
+    document.querySelector('.portfolio-hidden > div:first-child').classList.toggle('active')
+})
 
 /* 
 offsetWidth- hansi elemente verilibse onun width,padding-left,padding-right,border-left,border-right toplamini alir.Verilen overflow'nun hec bir onemi yoxdur.
